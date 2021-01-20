@@ -1,6 +1,6 @@
 //백준 2580
 //스도쿠
-//백트래킹
+//백트래킹 문제인데 백트래킹 사용 안 함..
 //3 이용 3의 배수같은 것 쓸 수 있을듯
 //가로 세로 3*3박스 모두 visit되지 않은 숫자 찾기
 
@@ -63,7 +63,7 @@ public class p2 {
 				System.out.print("3*3 false "+(i+1));
 			System.out.println();*/
 			
-			if(arr1[i]==false && arr2[i]==false && arr3[i]==false) {
+			if(arr1[i]==false && arr2[i]==false && arr3[i]==false) { //가로 세로 3*3박스에 모두 없는 수를 찾는다.
 				answer = i+1;
 				arr1[i]=true;
 				arr2[i]=true;
@@ -81,7 +81,7 @@ public class p2 {
 		arr2 = new boolean[9];
 		arr3 = new boolean[9];
 		
-		
+		//스도쿠 입력
  		for(int i=0; i<9; i++) {
 			String n [] = br.readLine().split(" ");
 			for(int j=0; j<9; j++) {
@@ -89,6 +89,7 @@ public class p2 {
 			}
 		}
 	
+ 		//0자리에 알맞은 수 넣기
  		for(int i=0; i<9; i++) {
  			for(int j=0; j<9; j++) {
  				if(arr[i][j]==0)
@@ -96,6 +97,7 @@ public class p2 {
  			}
  		}
 		
+ 		//정답 스도쿠 출력
 		for(int i=0; i<9; i++) {
 			for(int j=0; j<9; j++) {
 				System.out.print(arr[i][j]+" ");
