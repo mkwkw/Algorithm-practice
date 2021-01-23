@@ -59,6 +59,7 @@ public class p3 {
 					System.exit(0);
 				}
 		 
+				//0찾기
 				// 만약 해당 위치가 0 이라면 1부터 9까지 중 가능한 수 탐색
 				if (arr[row][col] == 0) {
 					for (int i = 1; i <= 9; i++) {
@@ -68,7 +69,6 @@ public class p3 {
 							sudoku(row, col + 1); //다음 열로 넘어감
 						}
 					}
-					
 				}
 		 
 				sudoku(row, col + 1);
