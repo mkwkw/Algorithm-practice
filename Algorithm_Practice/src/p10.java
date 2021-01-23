@@ -2,11 +2,12 @@
 //1로 만들기
 // 나누기 3, 나누기 2, -1
 //dp
+//성공!!
 import java.io.*;
 public class p10 {
 
 	private static int n;
-	private static int dp[] = new int [1000000];
+	private static int dp[] = new int [1000001];
 	private static int count;
 	
 	public static void main(String[] args) throws IOException{
