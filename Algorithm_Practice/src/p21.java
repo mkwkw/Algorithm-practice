@@ -9,29 +9,29 @@ public class p21 {
 		Scanner sc = new Scanner(System.in);
 		int g = sc.nextInt();
 		
-		int num [] = new int [100001]; 
+		long num [] = new long [200001]; 
 		
 		num[0]=0;
-		for(int i=1; i<=100000; i++) {
+		for(int i=1; i<=200000; i++) {
 			num[i] = i*i;	
 		}
 		
 
-		int dif = 0; //Â÷
+		long dif = 0; //Â÷
 		int a = 1; //pointer1
 		int b = 1; //pointer2
-		int ans = 0;
+		int ans = -1;
 		while(true) {
 			
-			if(b >= 100000) {
+			if(b-a==1 && dif > g) {
 				
 				break;
 			}
 			dif = num[b] - num[a];
-			if(dif > g) {
+			if(dif >= g) {
 				a++;
 			}
-			else if(dif<g) {
+			else  {
 				b++;			
 			}
 			
@@ -42,8 +42,8 @@ public class p21 {
 			}
 			
 		}
-		if(ans==0)
-			System.out.println(-1);
+		if(ans==-1)
+			System.out.println("-1");
 		
 			
 		sc.close();
