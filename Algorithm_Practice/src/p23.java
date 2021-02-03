@@ -30,6 +30,7 @@ public class p23 {
 				stack.push(i);
 			
 			//개수 비교
+			//오등큰수가 나타나면 ngf값을 먼저 정한다.
 			while(!stack.isEmpty()&&f[num[i]]>f[num[stack.peek()]]) {
 			
 				ngf[stack.pop()]=num[i];
@@ -37,6 +38,7 @@ public class p23 {
 			stack.push(i);
 		}
 		
+		//오등큰수가 없으면 -1
 		while(!stack.isEmpty()) {
 			ngf[stack.pop()]--;
 		}

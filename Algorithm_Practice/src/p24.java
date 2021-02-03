@@ -20,7 +20,7 @@ public class p24 {
 			brr = br.readLine().split(" ");
 			int g = Integer.parseInt(brr[0]);
 			int x = Integer.parseInt(brr[1]);
-			ice[x]=g;
+			ice[x]=g; //ex) 예제 -> ice[7]=4
 		}
 		
 		//누적합 이용
@@ -29,6 +29,7 @@ public class p24 {
 			pre[i] = pre[i-1]+ice[i];
 		}
 		
+		//1000000범위 내에 있으면 각 범위에서의 누적합 비교해서 큰 것 출력
 		if(k<=1000000) {
 			for(int i=0; i<=1000000; i++) {
 				if(i+k<=1000000 && i-k>=1)
@@ -36,7 +37,7 @@ public class p24 {
 			}
 			System.out.println(result);
 		}
-		else
+		else //1000000범위 벗어나면 x좌표 범위를 모두 포함하므로 1000000까지의 누적합이 결과이다.
 			System.out.println(pre[1000000]);
 	}
 
