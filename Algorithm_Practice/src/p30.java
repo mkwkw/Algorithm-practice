@@ -46,7 +46,7 @@ public class p30 {
 		visited = new boolean [n+1];
 		
 		for(int i=0; i<=n; i++) { //인접 행렬 원소 모두 0으로 초기화
-			Arrays.fill(mat, 0);
+			Arrays.fill(mat[i], 0);
 		}
 		
 		for(int i=0; i<m; i++) {

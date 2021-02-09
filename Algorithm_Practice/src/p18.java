@@ -11,14 +11,14 @@ public class p18 {
 		
 		int arr[] = new int [n+1];
 		arr[0]=0;
- 		for(int i=1; i<=5; i++) {
+ 		for(int i=1; i<=n; i++) {
 			arr[i]=sc.nextInt();
 		}
  		
  		//´©ÀûÇÕ
  		int prefixsum[] = new int [n+1];
  		prefixsum[0] = arr[0];
- 		for(int i=1; i<=5; i++) {
+ 		for(int i=1; i<=n; i++) {
  			prefixsum[i] = prefixsum[i-1]+arr[i];
  			
  		}
