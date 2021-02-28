@@ -1,5 +1,6 @@
 //1번
 //이상한 하노이 탑
+//시도
 import java.io.*;
 import java.util.*;
 public class p45 {
