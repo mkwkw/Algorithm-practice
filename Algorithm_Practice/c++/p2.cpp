@@ -7,7 +7,7 @@ Do not use file input and output
 
 Please be very careful. 
 */
-
+//scpc 2번 해결 못 함
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
