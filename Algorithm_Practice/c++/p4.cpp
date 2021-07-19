@@ -1,7 +1,7 @@
 #include<iostream>
 #include<algorithm>
 #include<vector>
-
+//boj #1448 í†µê³¼
 using namespace std;
 
 int main(){
@@ -14,14 +14,14 @@ int main(){
 		cin>>v[i];
 	}
 	
-	//¿À¸§Â÷¼ø Á¤·Ä 
+	//ì˜¤ë¦„ì°¨ìˆœ ì •ë ¬ 
 	sort(v.begin(), v.end());
 	
 	int size = v.size();
 	int sum=0;
 	int result=0;
 	
-	//Á¦ÀÏ Å« º¯ 3°³ °ñ¶ó¼­ »ï°¢Çü Á¶°Ç ¸¸Á·ÇÏ´ÂÁö ÆÇº° 
+	//ì œì¼ í° ë³€ 3ê°œ ê³¨ë¼ì„œ ì‚¼ê°í˜• ì¡°ê±´ ë§Œì¡±í•˜ëŠ”ì§€ íŒë³„ 
 	for(int i=size-1; i>1; i--){
 		int c = v[i], b=v[i-1], a=v[i-2];
 		if(c<a+b) {
@@ -31,8 +31,8 @@ int main(){
 		
 	}
 	
-	if(sum==0) result=-1; //»ï°¢Çü Á¶°Ç ¸¸Á·ÇÏ´Â °Í ¾øÀ» ¶§ 
-	else result = sum; //»ï°¢Çü Á¶°Ç ¸¸Á·ÇÏ´Â °Í ÀÖÀ» ¶§ 
+	if(sum==0) result=-1; //ì‚¼ê°í˜• ì¡°ê±´ ë§Œì¡±í•˜ëŠ” ê²ƒ ì—†ì„ ë•Œ 
+	else result = sum; //ì‚¼ê°í˜• ì¡°ê±´ ë§Œì¡±í•˜ëŠ” ê²ƒ ìžˆì„ ë•Œ 
 	
 	cout<<result;
 
