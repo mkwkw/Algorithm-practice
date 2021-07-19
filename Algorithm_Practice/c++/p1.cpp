@@ -1,5 +1,5 @@
 #include <iostream>
-//2021 scpc ¸¸Á¡ 80Á¡ Åë°ú ¼öÇà½Ã°£ 0.48347ÃÊ 
+//2021 scpc Â¸Â¸1ë²ˆ ë¬¸ì œ ë§Œì  í•´ê²° 
 using namespace std;
 
 int Answer;
