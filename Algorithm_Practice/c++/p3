@@ -2,6 +2,7 @@
 #include <string>
 #include<vector>
 #include <algorithm>
+//boj #10825 통과
 using namespace std;
 
 struct student{
