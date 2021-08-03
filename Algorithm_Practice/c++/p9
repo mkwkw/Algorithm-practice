@@ -30,37 +30,20 @@ int main() {
 						두 번째 주유소 갈만큼만 넣기
 					else
 						첫 번째 주유소 가격을 기준 가격으로 정하고 첫 번째 이후의 주유소 가격을 따져본다.
+	이후 기준 가격보다 적으면 기준 가격으로 재지정하고 거리와 가격을 곱해서 더해나간다.
 	*/
 	
 	sumprice = price[0] * dist[0]; //첫 번째 주유소
+	oilprice = price[0];
 
-	//if (price[0] > price[1])
-	//	oilprice = price[1]; gasdist = dist[1];
-	//else
-	//	oilprice = price[0]; gasdist = dist[1];
-
-
-
-	for (int i = 0; i < N - 2; i++) { //두 번째 주유소부터 N-2번째 주유소에서 도착지까지 가는 것까지 
-		if (price[i] > price[i + 1]) {
-			oilprice = price[i + 1];
-			//gasdist = dist[i];
-			//sumprice += oilprice * gasdist;
-			//cout << oilprice << '\n';
-		}
-		else { 
-
-			oilprice = price[i]; 
-			//gasdist += dist[i];
-			//sumprice += oilprice * gasdist;
-			//cout << oilprice << '\n';
+	for (int i = 1; i < N - 1; i++) { //두 번째 주유소부터 N-2번째 주유소에서 도착지까지 가는 것까지 
+		if (oilprice> price[i]) {
+			oilprice = price[i];
 		}
 		
-		sumprice += oilprice * dist[i+1];
-		//cout <<"합"<< sumprice << '\n';
-
+		sumprice += oilprice * dist[i];
+		
 	}
-	//sumprice += oilprice * dist[N - 2];
-
+	
 	cout << sumprice;
 }
