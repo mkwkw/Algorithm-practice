@@ -5,24 +5,38 @@
 using namespace std;
 
 int N, M, result=0;
-int node[1001]; //±âÁØ ³ëµå ÀúÀå - ÁýÇÕ ±¸ºÐÇÒ ¶§ »ç¿ë
-vector<pair<int, pair<int, int>>> Edge; //(°ª, (³ëµå, ³ëµå))ÇüÅÂ
-bool visited[100001];
+int node[1001]; //ê¸°ì¤€ ë…¸ë“œ ì €ìž¥ - ì§‘í•© êµ¬ë¶„í•  ë•Œ ì‚¬ìš©
+vector<pair<int, pair<int, int>>> Edge; //(ê°’, (ë…¸ë“œ, ë…¸ë“œ))í˜•íƒœ
+bool visited[1001];
 
+int find(int a) {
+	if (node[a] == a) return a;
+	else return node[a] = find(node[a]);
+}
+
+bool samenode(int a, int b) {
+	a = find(a);
+	b = find(b);
+
+	return (a == b);
+}
+
+void merge(int a, int b) {
+	a = find(a);
+	b = find(b);
+
+	if (a != b)
+		node[b] = a;
+}
 
 int main() {
 	int N;
 	int M;
-	int minprice = 10001;
-	int nextnode = 0;
-
-	for (int i = 0; i < 100001; i++)
-		visited[i] = false;
 
 	cin >> N >> M;
 
 	for (int i = 1; i <= N; i++) {
-		node[i] = i; //±âÁØ ³ëµå ÀÚ±âÀÚ½ÅÀ¸·Î ÀÏ´Ü ÃÊ±âÈ­
+		node[i] = i; //ê¸°ì¤€ ë…¸ë“œ ìžê¸°ìžì‹ ìœ¼ë¡œ ì¼ë‹¨ ì´ˆê¸°í™”
 	}
 	
 	for (int i = 0; i < M; i++) {
@@ -37,68 +51,17 @@ int main() {
 
 		Edge.push_back(make_pair(c, make_pair(a, b)));
 	}
-	//edges ¹è¿­¿¡ °¢ °£¼± Á¤º¸µé ÀúÀå, ÃÖ¼Ú°ª ÀúÀå
+	//edges ë°°ì—´ì— ê° ê°„ì„  ì •ë³´ë“¤ ì €ìž¥, ìµœì†Ÿê°’ ì €ìž¥
 
-	sort(Edge.begin(),Edge.end()); //°ª ±âÁØ ³»¸²Â÷¼ø Á¤·Ä
-	cout << "\n";
-	for (int i = 0; i < M; i++) {
-
-		cout << Edge[i].second.first << " " << Edge[i].second.second<<" "<<Edge[i].first<<"\n";
-	}
-
-	for (int i = 0; i < M; i++) {
-		if (!visited[Edge[i].second.first] && !visited[Edge[i].second.second]) {
-			result += Edge[i].first;
-			visited[Edge[i].second.first] = true;
-			visited[Edge[i].second.second] = true;
-			node[Edge[i].second.first] = min(node[Edge[i].second.first], node[Edge[i].second.second]);
-			for (int j = 1; j <= N; j++) {
-				if(node[j]==node[Edge[i].second.second])
-					node[j] = node[Edge[i].second.first];
-				
-			}
-		}
-		else if(!visited[Edge[i].second.first] && visited[Edge[i].second.second]){
-			result += Edge[i].first;
-			visited[Edge[i].second.first] = true;
-			node[Edge[i].second.first] = min(node[Edge[i].second.first],node[Edge[i].second.second]);
-			node[Edge[i].second.second] = node[Edge[i].second.first];
-		}
-		else if (visited[Edge[i].second.first] && !visited[Edge[i].second.second]) {
-			result += Edge[i].first;
-			visited[Edge[i].second.second] = true;
-			node[Edge[i].second.first] = min(node[Edge[i].second.first], node[Edge[i].second.second]);
-			node[Edge[i].second.second] = node[Edge[i].second.first];
-		}
-		else {//µÑ ´Ù ¹æ¹®µÈ »óÅÂ //°°Àº ÁýÇÕ-cycle »ý¼º-¿¬°áx or ´Ù¸¥ ÁýÇÕ-¿¬°áo 
-			if (node[Edge[i].second.first] == node[Edge[i].second.second]) { //°°Àº ÁýÇÕ
-				continue;
-			}
-			else {
-				result += Edge[i].first;
-				node[Edge[i].second.first] = min(node[Edge[i].second.first], node[Edge[i].second.second]);
-				node[Edge[i].second.second] = node[Edge[i].second.first];
-			}
-		}
-		for (int i = 1; i <= N; i++) {
-		cout << "Node: " << node[i]<<"\n";
-		}
-		cout << result<<"\n";
-	}
+	sort(Edge.begin(),Edge.end()); //ê°’ ê¸°ì¤€ ë‚´ë¦¼ì°¨ìˆœ ì •ë ¬
 
 	
+	for (int i = 0; i < M; i++) {
+		if (!samenode(Edge[i].second.first, Edge[i].second.second)) {
+			merge(Edge[i].second.first, Edge[i].second.second);
+			result += Edge[i].first;
+		}		
+	}	
 
 	cout << result;
-
-	/*for (int i = 1; i <= N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (edges[j].left == i) {
-				if (edges[j].price < minprice) {
-					minprice = edges[j].price;
-					nextnode = edges[j].right;
-				}
-					
-			}
-		}
-	}*/
 }
