@@ -69,7 +69,7 @@ int routeChecking(vector<vector<int>> &v, int n, int m){
  * 2. 출발 노드를 기준으로 각 노드의 최소 비용 저장
  * 3. 방문하지 않은 노드 중에서 가장 비용이 적은 노드 선택
  * 4. 해당 노드를 거쳐서 특정한 노드로 가는 경우를 고려하여 최소 비용 갱신
- * 5. 3-4번 반복
+ * 5. 3-4번 반복 - 우선순위 큐에서는 가장 비용이 적은 노드 선택하는 것과 최소 비용 갱신하는 것을 빠르게 할 수 있다.
 */
 
 int routeFinding(vector<vector<bool>> &visited, int n, int m){
