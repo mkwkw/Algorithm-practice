@@ -5,6 +5,7 @@
 
 using namespace std;
 
+//프림 알고리즘 - 노드 중심
 typedef pair<double, double> ci1;
 typedef pair<int, double> ci2;
 
