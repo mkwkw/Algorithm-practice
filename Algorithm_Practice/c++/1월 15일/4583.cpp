@@ -7,7 +7,6 @@ string mirror(string word){
     stack<char> words;
     string res="";
     for(int i=0; i<word.length(); i++){
-        //cout<<"word[i]: "<<word[i]<<'\n';
         if(word[i]!='b' && word[i]!='d' && word[i]!='p' && word[i]!='q' && word[i]!='i' && word[i]!='o'&& word[i]!='v' && word[i]!='w' && word[i]!='x'){
             return "INVALID";
         }
@@ -64,3 +63,4 @@ int main(){
 
 //단순 구현 문제
 //조건 빠뜨리지 않기!
+//거울에 비친 수 -> 출력 순서가 입력 순서의 반대가 되어야함. -> 스택 사용
