@@ -1,4 +1,4 @@
-//중 - 숫자판 점프
+//중 - 숫자판 점프 -  dfs함수 -> solution함수로 이름 바꾸기, 설명 쓰기, 정리
 #include <iostream>
 #include <vector>
 

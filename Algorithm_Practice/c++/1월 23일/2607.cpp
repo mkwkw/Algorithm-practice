@@ -1,4 +1,4 @@
-//하-비슷한 단어
+//하-비슷한 단어 - 첫 번째 단어 저장, 비교할 단어들 입력받고 판단하는 함수 따로 나누기, solution 함수 하나로 정리하기  
 #include <iostream>
 #include <vector>
 #include <map>
@@ -25,6 +25,7 @@ int similar(int n, string str){
     }
 
 
+    //첫번째 단어와 비교할 단어 입력 받고 판단
     for(int i=0; i<n-1; i++){
         cnt=0;
         for(int t=0; t<26; t++){
