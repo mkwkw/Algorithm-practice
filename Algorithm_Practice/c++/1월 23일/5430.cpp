@@ -79,3 +79,113 @@ int main() {
             cout << toStr(dq, is_reversed) << '\n';
     }
 }
+
+/*
+#include <iostream>
+#include <deque>
+#include <queue>
+#include <string>
+#include <sstream>
+#include <vector>
+
+using namespace std;
+
+//뒤집기 - 덱에서 push_front()
+//맨 앞에 거 지우기 - pop_front()
+deque<string> deq;
+vector<string> v;
+queue<string> q;
+void print_deq(int front){
+    cout<<"[";
+    if(deq.empty()){
+        cout<<"]\n";
+    }
+    else if(front==0){
+
+            for(int k=0; k<deq.size()-1; k++){
+                cout<<deq[k]<<',';
+                //deq.pop_front();
+            }
+            cout<<deq[deq.size()-1]<<"]"<<'\n';
+        }
+        else{
+            for(int k=front; k>0; k--){
+                cout<<deq[k]<<',';
+                //deq.pop_front();
+            }
+            cout<<deq[0]<<"]"<<'\n';
+    }
+
+
+}
+
+
+int main(){
+    
+    int t;
+
+    cin>>t;
+    
+    for(int i=0; i<t; i++){
+        
+        string cmd; //ex. RDD
+        int n;
+        string arr; //정수 배열
+        string num;
+        cin>>cmd;
+        cin>>n;
+        cin>>arr;
+
+        int prev = 0;
+        int cur = 0;
+
+        arr.erase(0,1);
+        arr.erase(arr.length()-1, arr.length());
+
+        //cout<<"arr: "<<arr;
+        
+        cur = arr.find(',');
+        while(cur != string::npos){
+            string substring = arr.substr(prev, cur - prev);
+            deq.push_back(substring);
+            prev= cur+1;
+            cur = arr.find(',',prev);
+        }
+        deq.push_back(arr.substr(prev, cur-prev));
+
+        int front = 0;
+        int back = deq.size()-1;
+    
+        for(int k=0; k<cmd.length(); k++){
+                        
+            if(cmd[k]=='R'){
+                //reversing();
+                swap(front, back);
+            }
+            else{
+                if(deq.empty() || n==0){
+                    cout<<"error\n";
+                    break;
+                }
+                //erasing();
+                else{
+                    if(front == 0){
+                        deq.pop_front();
+                        back = deq.size()-1;
+                    }
+                    else{
+                        deq.pop_back();
+                        front = deq.size()-1;
+                    }
+                }
+                
+            }
+        }
+
+        if(!(n==0)){print_deq(front);}
+
+        deq.clear();
+
+    }
+}
+*/
