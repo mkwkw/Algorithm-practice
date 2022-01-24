@@ -1,52 +1,50 @@
-//하-비슷한 단어 - 첫 번째 단어 저장, 비교할 단어들 입력받고 판단하는 함수 따로 나누기, solution 함수 하나로 정리하기  
+//하-비슷한 단어  
 #include <iostream>
 #include <vector>
-#include <map>
 
 using namespace std;
 
-vector<int> alphabet; //비교 기준 알파벳 저장할 배열 (문자의 등장 횟수)
+vector<int> counting(vector<int> &alphabet, string str){ //단어의 각 알파벳의 개수 세기
 
-int similar(int n, string str){
-    vector<int> newAlphabet;
-    int cnt=0;
-    int answer=0;
-
-    for(int t=0; t<26; t++){
-        //char a = 'A'+t;
-        newAlphabet.push_back(0);
-    }
-
+    //A부터 Z 알파벳의 순서를 인덱스로 하여 단어의 각 알파벳 개수 저장 
     for(int i=0; i<str.length(); i++){
-        //alphabet[str[i]-65].second++;
-        alphabet[str[i]-65]++;
-        //for(int j=0; j<26; j++)
-        //    cout<<alphabet[j].second<< ' ';
+        alphabet[str[i]-'A']++;
     }
 
+    return alphabet;
+}
 
-    //첫번째 단어와 비교할 단어 입력 받고 판단
+int solution(int n, string word){
+    vector<int> first_alphabet; //비교 기준 단어의 알파벳 저장할 배열 
+    vector<int> new_alphabet; //비교 대상 단어의 알파벳 저장할 배열
+    int cnt=0; //다른 알파벳 개수
+    int answer=0; //비슷한 단어 개수
+
+    //첫 번째 단어의 각 알파벳 개수 저장하는 배열 초기화
+    first_alphabet.assign(26,0);
+    first_alphabet = counting(first_alphabet, word);
+
+    //비교할 단어 입력 받고 판단
     for(int i=0; i<n-1; i++){
-        cnt=0;
-        for(int t=0; t<26; t++){
-            //newAlphabet[t].second=0; //초기화
-            newAlphabet[t]=0;
-        }
-
-        string s;
-        cin>>s;
-        for(int j=0; j<s.length(); j++){
-            //newAlphabet[s[j]-65].second++;
-            newAlphabet[s[j]-65]++;
-        }
-
-        for(int p=0; p<26; p++){
-            //cnt += newAlphabet[p].second - alphabet[p].second;
-            cnt += abs(newAlphabet[p]-alphabet[p]);
-        }
-        //cout<<"cnt: "<<cnt<<'\n';
+        cnt=0; //다른 알파벳 개수 저장하는 변수 초기화
         
-        if(cnt==0 || cnt==1 || (cnt==2&&s.length()==str.length())){
+        //비교할 단어의 알파벳 저장하는 배열 0으로 초기화
+        new_alphabet.assign(26,0);
+
+        //비교할 단어 입력받기
+        string next_word; 
+        cin>>next_word;
+
+        //비교할 단어의 각 알파벳 개수 저장
+        new_alphabet = counting(new_alphabet, next_word);
+        
+        //다른 알파벳 개수 세기
+        for(int p=0; p<26; p++){
+            cnt += abs(new_alphabet[p]-first_alphabet[p]);
+        }
+        
+        //비슷한 단어의 조건에 해당되면 비슷한 단어 개수 하나씩 증가
+        if(cnt==0 || cnt==1 || (cnt==2 && next_word.length()==word.length())){
             answer++;
         }
        
@@ -55,22 +53,18 @@ int similar(int n, string str){
 }
 
 int main(){
-    int n;
-    int answer;
+    
+    int n, answer; //전체 단어 개수, 비슷한 단어 개수
 
+    //전체 단어 개수 입력
     cin>>n;
 
-    string str; //비교 기준
-    cin>>str;
-
-    alphabet.assign(26,0);
-
-    //for(int i=0; i<26; i++){
-        //char a = 'A'+i;
-        //alphabet.push_back(make_pair(a,0));
-    //}
-
-    answer = similar(n,str);
+    //비교 기준 단어 입력
+    string word; 
+    cin>>word;
+    
+    //비슷한 단어 개수 출력
+    answer = solution(n,word);
     cout<<answer;
    
 }
