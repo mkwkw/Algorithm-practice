@@ -36,7 +36,7 @@ string print_deq(deque<int> &dq, int front){
     return res;
 }
 
-//str에서 숫자만 추출하기
+//str에서 숫자만 추출하기 (isdigit함수 이용)
 deque<int> extract_num(string str){
     deque<int> res;
     string tmp="";
