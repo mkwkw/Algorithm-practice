@@ -1,4 +1,4 @@
-//중-숫자판 점프
+//중-숫자판 점프 - 전역변수 없는 버전
 #include <iostream>
 #include <vector>
 
