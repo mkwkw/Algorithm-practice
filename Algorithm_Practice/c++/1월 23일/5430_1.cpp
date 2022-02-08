@@ -56,14 +56,11 @@ deque<int> extract_num(string str){
 }
 
 
-string solution(){
+string solution(string cmd, int n, string str){
     
     deque<int> dq;
-    string cmd, str, ans; //명령어: ex. RDD, 정수 배열(string으로 입력 받음),정답
-    int n; //정수 배열의 크기
+    string ans; //정답
     bool is_error=false; //error인 경우 true, 아니면 false
-
-    cin>>cmd>>n>>str;
 
     dq = extract_num(str); //str에서 숫자를 추출하여 덱에 넣기        
 
@@ -107,10 +104,10 @@ string solution(){
 }
 
 int main(){
-    
-    string answer;
-
-    answer = solution();
+    int n; //정수 배열의 크기
+    string answer, cmd, str; //정답, 명령어, 주어지는 배열
+    cin>>cmd>>n>>str;
+    answer = solution(cmd, n, str);
     
     cout<<answer;
 }
