@@ -32,11 +32,10 @@ bool backtracking(vector<vector<int>> &answer, vector<pair<int, int>> &blank, in
 				return true;
 			}
 			
-			else{ //더 나아갈 수 없다면(이 시도가 틀렸다면) true로 바꾸었던 것을 false로 다시 바꿈, 그리고 for문이 다시 돌아가며 다음 숫자가 알맞는지 다시 탐색
+			else{ //blank 끝까지 탐색했는데 true리턴이 안된다면 문제가 있는 것임. 다시 idx로 돌아와서 true로 바꾸었던 것을 false로 다시 바꿈, 그리고 for문이 다시 돌아가며 다음 숫자가 알맞는지 다시 탐색
 				rows[r][num]=0;
 				cols[c][num]=0;
 				square[a][num]=0;
-				
 			}
 		}
 	}
