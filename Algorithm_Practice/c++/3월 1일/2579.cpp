@@ -11,9 +11,9 @@ int solution(int n, vector<int>& score) {
 	
     //n위치까지 가는 경우: n-3까지 오고 n-1계단 밟고, n 계단 밟기 / n-2까지 오고 n 계단 밟기
 
-	dp[0]=score[0];
-	dp[1]=max(score[1], score[0]+score[1]);
-	dp[2]=max(score[0]+score[2], score[1]+score[2]);
+	dp[1]=score[1];
+	dp[2]=max(score[2], score[1]+score[2]);
+	dp[3]=max(score[1]+score[3], score[2]+score[3]);
 	
 	for(int i=3; i<score.size(); i++){
 		dp[i]= max(dp[i-3]+score[i-1]+score[i], dp[i-2]+score[i]);
