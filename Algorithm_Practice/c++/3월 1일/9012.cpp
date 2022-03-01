@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+
 using namespace std;
 
 vector<string> solution(int T, vector<string> inputs){
