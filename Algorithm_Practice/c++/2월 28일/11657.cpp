@@ -9,6 +9,9 @@ typedef tuple<int, int, int> ti; //시작점, 도착점, 비용
 const int INF = 1e6*5;
 
 //벨만-포드: 음수 가중치 계산 가능한 다익스트라와 비슷한 모델
+//시작점에서 모든 점에 도달하는 가중치 값을 계산
+//음의 사이클 판별 조건: n개의 정점, n번의 갱신 (음의 사이클이 아니면 최대 n-1번의 갱신) -> 모든 정점으로의 값을 INF+1로 초기화
+//간선 정보 중요
 vector<ll> bellmanFord(int n, int m, int start, vector<ti> &edges){
     //언더 플로우: 500*6000*(-10000) : int 범위 넘으므로 long long 사용
     vector<ll> dist(n+1,INF); //모든 정점 INF로 초기화 (시작점에서 k정점으로 가는 값이 dist[k])
