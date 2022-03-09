@@ -30,3 +30,4 @@ int main(){
     int answer = calculate(str);
     cout<<answer;
 }
+//서로 다른 부분문자열을 조사해야하므로 중복 없이 저장하는 set을 이용한다.
