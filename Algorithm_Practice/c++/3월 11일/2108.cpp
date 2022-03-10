@@ -5,6 +5,29 @@
 
 using namespace std;
 
+deque<int> make_init(vector<int> &cmd, int n, deque<int> &dq2){
+    deque<int> dq;
+    for(int i=0; i<n; i++){
+        if(cmd[i]==1){
+            dq.push_front(dq2.front());
+            dq2.pop_front();
+        }
+        else if(cmd[i]==2){
+            int tmp = dq.front();
+            dq.pop_front();
+            dq.push_front(dq2.front());
+            dq2.pop_front();
+            dq.push_front(tmp);
+        }
+        else{
+            dq.push_back(dq2.front());
+            dq2.pop_front();
+        }
+    }
+
+    return dq;
+}
+
 int main(){
     vector<int> cmd;
     deque<int> dq1; //초기 카드 상태 담을 덱
@@ -25,23 +48,7 @@ int main(){
     
     reverse(cmd.begin(), cmd.end()); //algorithm 헤더의 reverse함수 이용
 
-    for(int i=0; i<n; i++){
-        if(cmd[i]==1){
-            dq1.push_front(dq2.front());
-            dq2.pop_front();
-        }
-        else if(cmd[i]==2){
-            int tmp = dq1.front();
-            dq1.pop_front();
-            dq1.push_front(dq2.front());
-            dq2.pop_front();
-            dq1.push_front(tmp);
-        }
-        else{
-            dq1.push_back(dq2.front());
-            dq2.pop_front();
-        }
-    }
+    dq1 = make_init(cmd, n, dq2);
 
     while(!dq1.empty()){
         int num = dq1.front();
