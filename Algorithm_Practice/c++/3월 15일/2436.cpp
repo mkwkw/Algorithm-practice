@@ -3,7 +3,7 @@
 
 using namespace std;
 
-//서로소인지 체크하는 함수
+//공약수가 무엇인가 -> 공약수가 1이면 서로소
 //항상 x >= y 이므로 대소관계를 체크하지 않음
 int calcGCD(int x, int y) {
     int tmp;
