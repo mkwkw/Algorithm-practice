@@ -46,6 +46,16 @@ int main(){
         return 0;
     }
 
+    //중복 검사 - 덱도 인덱스 접근 가능
+    for(int i=0; i<n; i++){
+        for(int j=i+1; j<n; j++){
+            if(wheel[i] != '?' && wheel[i]==wheel[j]){
+                cout<<"!";
+                return 0;
+            }
+        }
+    } 
+
     //시계방향으로 출력해야하므로 deque의 뒤에서부터 출력
     while(!wheel.empty()){
         top = wheel.back();
