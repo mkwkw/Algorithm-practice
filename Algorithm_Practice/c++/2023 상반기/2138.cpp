@@ -55,7 +55,7 @@ int countNum(string &originalNum, string &answerNum, int n){
         } 
     }
 
-    //스위치 누른 결과가 정답과 같은지 여부
+    //스위치 누른 결과가 정답과 같은지 여부 - 마지막 문자만 비교하면 됨.
     if(answerNum[n-1] == firstO[n-1]){
         flag1 = true;
     }
