@@ -53,6 +53,7 @@ int main(int argc, char** argv)
 			b = b.substr(b.length()-a.length());
 		}
 
+        //같은 인덱스로 비교
 		for(int i=0; i<a.length(); i++){
 			if(a[i]!=b[i]){
 				//cout<<"a: "<<a[i]<<" b: "<<b[i]<<'\n';
