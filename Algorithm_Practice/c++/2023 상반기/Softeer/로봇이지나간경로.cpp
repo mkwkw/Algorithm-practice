@@ -11,11 +11,43 @@ vector<vector<bool>> visited;
 string result = "", answer = "";
 char dir;
 
-
-bool verify(int r, int c, int n, int m){
-	if(r<0 || r>=n || c<0 || c>=m || board[r][c]!='#'){
+//백트래킹으로 인자에 문자열 넘기면서 하나씩 확인하도록 - 1인 부분 좌표 벡터에 넣어서 문자열 길이 == 벡터의 크기 될 때까지 탐색하도록
+bool verify(int r, int c, int n, int m, int dir){
+	if(r<0 || r>=n || c<0 || c>=m){
 		return false;
 	}
+
+	bool flag = true;
+	switch(dir){
+		case 0:
+		if(!(board[r][c] == '#' && board[r+1][c] == '#')){
+			flag = false;
+		}
+		break;
+
+		case 1:
+		if(!(board[r][c] == '#' && board[r][c-1] == '#')){
+			flag = false;
+		}
+		break;
+
+		case 2:
+		if(!(board[r][c] == '#' && board[r-1][c] == '#')){
+			flag = false;
+		}
+		break;
+
+		case 3:
+		if(!(board[r][c] == '#' && board[r][c+1] == '#')){
+			flag = false;
+		}
+		break;	
+	}
+
+	if(!flag){
+		return false;
+	}
+
 	return true;
 }
 
@@ -50,47 +82,48 @@ void dfs(int r, int c, int n, int m, int prevDir){
 		int nextR = r + dr[i];
 		int nextC = c + dc[i];
 
-		if(verify(nextR, nextC, n, m) && !visited[nextR][nextC]){
+		if(verify(nextR, nextC, n, m, i) && !visited[nextR][nextC]){
             if(prevDir == i){
                 result += 'A';
             }
             else{
-                if((i-prevDir)%4 <(i-prevDir+4)%4){
-                    for(int j=prevDir; j<=(i-prevDir)%4; j++){
-                        result += 'R';  
-                    }
-                }
-                else{
-                    for(int j=prevDir; j<=(i-prevDir+4)%4; j++){
-                        result += 'L';  
-                    }
-                }
-                
+                if(prevDir-i == -1){
+					result += 'R';
+				}
+				else if(prevDir-i == 1){
+					result += 'L';
+				}
+				else if(prevDir-i == 3){
+					result += 'R';
+				}
+				else if(prevDir-i == -3){
+					result += 'L';
+				}
+				else{
+					result += "RR"; //이런 경우가 있나?
+				}
+                result += 'A';
             }
-            cout<<"res: "<<result<<'\n';
-            if(i==1 || i==3){
-                //for(int j=r; j<=nextR; j++){
-                    for(int k=c; k<nextC; k++){
-                        visited[r][k] = true;
-                    }
-                //}
-            }
-            else if(i==0 || i==2){
-                for(int j=r; j<nextR; j++){
-                    //for(int k=c; k<=nextC; k++){
-                        visited[j][c] = true;
-                    //}
-                }
-            }
+            //cout<<"res: "<<result<<'\n';
 
-            /*
-            for(int j=0; j<n; j++){
-                for(int k=0; k<m; k++){
-                    cout<<visited[j][k]<<' ';
-                }
-                cout<<"\n";
-            }
-            */
+			switch(i){
+				case 0:
+				visited[r-1][c] = true;
+				break;
+
+				case 1:
+                visited[r][c+1] = true;
+				break;
+
+				case 2:
+				visited[r+1][c] = true;
+                break;
+
+				case 3:
+				visited[r][c-1] = true;
+				break;
+
+			}
 			
 			dfs(nextR, nextC, n, m, i);
             //result="";
@@ -102,10 +135,8 @@ void dfs(int r, int c, int n, int m, int prevDir){
 
 int main(int argc, char** argv)
 {
-	//처음 방향 경우의 수: 4가지 - 백트래킹?
-	
 
-	int n, m, a, b, firstDir;
+	int n, m, a, b, firstDir, startR=-1, startC=-1;
 	char firstDirChar;
 	cin>>n>>m;
 
@@ -123,48 +154,45 @@ int main(int argc, char** argv)
 			visited.assign(n, vector<bool>(m, false));
 
 			if(board[i][j]=='#'){
-                cout<<"start: "<<i<<" "<<j<<'\n';
+                //cout<<"start: "<<i+1<<" "<<j+1<<'\n';
 
 				for(int k=0; k<4; k++){
-					if(verify(i+dr[k], j+dc[k], n, m)){
-                        cout<<"firstDir: "<<k<<'\n';
+					if(verify(i+dr[k], j+dc[k], n, m, k)){
+						result = "";
+                        //cout<<"firstDir: "<<k<<'\n';
 						dfs(i,j,n,m,k);
 
-                        cout<<"allPassed: "<<allPassed(n,m)<<'\n';
+                        //cout<<"allPassed: "<<allPassed(n,m)<<'\n';
 
 						if(allPassed(n,m)){
-							if(answer==""){
-								answer = result;
-								a = i+1;
-								b = j+1;
-								firstDir = k;
-							}
-							else{
-								if(result.length()<answer.length()){
-									answer = result;
-									a = i+1;
-									b = j+1;
-									firstDir = k;
-								}
-							}
+							startR = i;
+							startC = j;
+							firstDir = k;
+
+							break;
 						}
-                        for(int c=0; c<n; c++){
-                            for(int d=0; d<m; d++){
-                                cout<<visited[c][d]<<' ';
-                            }
-                            cout<<"\n";
-                        }
-                        cout<<"ans: "<<answer<<" result: "<<result<<'\n';
-                        result = "";
 					}
 				}
-				
-			
+
+				if(startR>-1){
+					break;
+				}
+			}
+			if(startR>-1){
+				break;
 			}
 
 		}
-	}
 
+		if(startR>-1){
+			break;
+		}
+	}	
+
+	answer = result;
+	a = startR+1;
+	b = startC+1;						
+						
 	switch(firstDir){
 		case 0:
 		firstDirChar = '^';
