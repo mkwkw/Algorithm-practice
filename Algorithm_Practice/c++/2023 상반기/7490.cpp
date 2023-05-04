@@ -32,6 +32,7 @@ void backtracking(int n, string tempStr, int tempNum, char op){
             strQ.push(tempStr[i]);
         }
 
+        //하나의 항 만들기
         while(!strQ.empty()){
             char ch = strQ.front();
             if(ch=='+' || ch=='-'){ //새로운 항이 만들어짐
@@ -40,6 +41,7 @@ void backtracking(int n, string tempStr, int tempNum, char op){
                 if(oneRes!="" && flag){
                     oneRes = "1"+oneRes;
                     res = stoi(oneRes);
+                    flag = false; //flag 원래대로!! - 이 코드 없으면 1 이후에도 oneRes를 res로 해버리는 오류 발생
                 }
 
                 oneRes = "";
@@ -51,13 +53,19 @@ void backtracking(int n, string tempStr, int tempNum, char op){
                     strQ.pop();
                     nextCh = strQ.front();
                 }
-
+                //cout<<"op: "<<ch<<" oneRes: "<<oneRes<<'\n';
                 if(ch=='+'){
-                    res += stoi(oneRes);
+                    //cout<<"beforeA: "<<res<<' ';
+                    res = res + stoi(oneRes);
+                    //cout<<"afterA: "<<res<<'\n';
                 }
                 else{
-                    res -= stoi(oneRes);
+                    //cout<<"beforeM: "<<res<<' ';
+                    //cout<<"minu: "<<stoi(oneRes)<<'\n';
+                    res = res - stoi(oneRes);
+                    //cout<<"afterM: "<<res<<'\n';
                 }
+                //cout<<"res: "<<res<<'\n';
             }
             else if(ch==' '){//1 바로 다음에 ' '가 나오는 경우 - ' '가 아닌 연산 나올 때까지 숫자를 다 붙여야함.
                 strQ.pop();
@@ -72,7 +80,7 @@ void backtracking(int n, string tempStr, int tempNum, char op){
                 }
             }
         }
-
+        //cout<<"res: "<<res<<'\n';
         if(res==0){
             cout<<tempStr<<'\n';
         }
@@ -87,6 +95,11 @@ void backtracking(int n, string tempStr, int tempNum, char op){
 }
 
 int main(){
+    //시간 초과 주의!
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
     int t, n;
     cin>>t;
 
