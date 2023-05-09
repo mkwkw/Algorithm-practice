@@ -37,15 +37,24 @@ int main(){
             int now = posQ.top().second;
             int nowTime = posQ.top().first;
             posQ.pop();
-            
-            if(nowTime>sxTime[now]){
+            //cout<<"now: "<<now<<" nowTime: "<<nowTime<<" sxTime["<<start<<"]: "<<sxTime[start]<<'\n';
+            if(nowTime>sxTime[start]){
+                continue;
+            }
+
+            if(now==x){
+                //cout<<"x\n";
+                sxTime[start] = min(sxTime[start], nowTime);
                 continue;
             }
             
             for(int k=0; k<path[now].size(); k++){
                 int next = path[now][k].second;
                 int nextTime = nowTime + path[now][k].first;
-                if(nextTime<sxTime[next]){
+                //cout<<"next: "<<next<<" nextTime: "<<nextTime<<'\n';
+                if(nextTime<sxTime[start] && next!=start){
+                    //sxTime[next] = nextTime;
+                    //cout<<"start: "<<i<<" mid: "<<now<<" end "<<next<<" sxTime: "<<sxTime[next]<<'\n';
                     posQ.push({nextTime, next});
                 }
             }
@@ -77,7 +86,7 @@ int main(){
 
     for(int i=1; i<=n; i++){
         if(i!=x){
-            cout<<"sxTime: "<<sxTime[i]<<" xsTime: "<<xsTime[i]<<'\n';
+            //cout<<"sxTime: "<<sxTime[i]<<" xsTime: "<<xsTime[i]<<'\n';
             answer = max(answer, sxTime[i]+xsTime[i]);
         }
     }
