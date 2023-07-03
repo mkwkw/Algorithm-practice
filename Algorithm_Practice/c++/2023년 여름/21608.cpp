@@ -13,7 +13,7 @@ using namespace std;
  * 4. 만족도 계산 - 친구들 번호가 숫자를 위치시킬 때도 사용하고 만족도 계산할 때도 사용되므로 vector<set<int>> 사용해서 미리 다 저장해놓고 사용하였음 
  * 결과: 성공
 */
-struct Pos{
+struct Pos{ //구조체 선언
     int friendCnt; //해당 위치에서 인접한 좋아하는 학생 수 (친구라고 하겠음)
     int emptyCnt; //해당 위치에서 인접한 빈 칸 수
     int row; //해당 위치의 행
