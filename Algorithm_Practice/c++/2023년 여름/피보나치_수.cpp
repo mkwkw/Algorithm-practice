@@ -3,6 +3,8 @@
 
 using namespace std;
 
+//dp 이용 및 나머지 원리 이용
+
 int solution(int n) {
     vector<int> fib;
     int answer = 0;
