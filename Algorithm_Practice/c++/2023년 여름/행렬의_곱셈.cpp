@@ -3,7 +3,7 @@
 
 using namespace std;
 
-//행렬A,B의 곱셈 
+//행렬A, B의 곱셈 
 //A[A의 행][A의 열(B의 행)]*B[A의 열(B의 행)][B의 행]
 vector<vector<int>> solution(vector<vector<int>> arr1, vector<vector<int>> arr2) {
     vector<vector<int>> answer, arr2Rotate;
