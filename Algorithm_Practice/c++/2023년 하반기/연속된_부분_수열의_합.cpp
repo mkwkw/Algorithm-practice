@@ -1,74 +1,51 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 
+//정렬 기준
+bool comp(const pair<int,int> &a, const pair<int,int> &b){
+    if(a.second-a.first==b.second-b.first){
+        return a.first<b.first; //길이가 같다면 시작 인덱스가 작은 것이 앞으로 오도록 정렬
+    }
+    return a.second-a.first<b.second-b.first; //길이가 다르다면 길이가 짧은 것이 앞으로 오도록 정렬
+}
+
 //투 포인터
 vector<int> solution(vector<int> sequence, int k) {
-    vector<int> answer, partSum;
-    int left = 0, right = partSum.size()-1, mid;
+    vector<int> answer;
+    vector<pair<int,int>> pos; //가능한 인덱스 쌍 후보 배열 - 나중에 정렬
+    int left = 0, right = 0, partSum = sequence[0]; // partSum: 부분 수열
     
     answer.assign(2,0);
-    partSum.assign(sequence.size()+1, 0);
     
-    sort(sequence.begin(), sequence.end());
-    
-    answer[0]=0;
-    answer[1]=partSum.size()-1;
-    
-    partSum[1] = sequence[0];
-    
-    for(int i=2; i<partSum.size(); i++){
-        partSum[i] = partSum[i-1]+sequence[i-1];
-    }
-    
-    for(int i=0; i<partSum.size(); i++){
-        cout<<partSum[i]<<' ';
-    }
-    
-    
-    // while(left<right){
-    //     if(partSum[right]-partSum[left]>=k){ //범위를 좁혀야함
-    //         if(partSum[right]-partSum[left]==k){
-    //             answer[0] = left;
-    //             answer[1] = right-1;
-    //         }
-    //         right--;
-    //     }
-    //     else{ //범위를 늘려야함
-    //         left++;
-    //     }
-    // }
-    
-    //이분탐색?
-    for(int i=0; i<partSum.size(); i++){
-        left = i;
-        right = partSum.size()-1;
-        while(left<right){
-            cout<<"left "<<left<<" right "<<right<<" mid "<<mid<<'\n';
-            mid = (left+right)/2;
-            if(partSum[mid]-partSum[left]>=k){
-                right = mid-1;
-                if(partSum[mid]-partSum[left]==k && mid-1-left<=answer[1]-answer[0]){
-                    answer[0] = left;
-                    answer[1] = mid-1;
-                    cout<<answer[0]<<' '<<answer[1]<<'\n';
-                }
+    while(true){
+        if(partSum==k){ //가능한 인덱스 쌍 후보 저장
+            pos.push_back({left, right});
+        }
+        
+        //left와 right가 모두 마지막 인덱스에 도달하면 break
+        if(left==sequence.size()-1 && right==sequence.size()-1){
+            break;
+        }
+        
+        //partSum이 k보다 작고 right가 마지막 인덱스에 도달하지 않았다면 right 증가
+        if(partSum<k && right<sequence.size()-1){
+            partSum += sequence[++right];
+        }
+        else{ 
+            if(left<sequence.size()-1){ //left가 마지막 인덱스에 도달하지 않았다면 left 증가
+                partSum -= sequence[left++];
             }
         }
     }
     
+    sort(pos.begin(), pos.end(), comp); //길이, 인덱스 기준 정렬
+    
+    answer[0] = pos[0].first;
+    answer[1] = pos[0].second;
+    
     return answer;
-}
-
-int main(){
-    vector<int> answer;
-
-    answer = solution({1,2,3,4,5}, 7);
-
-    for(int i=0; i<answer.size(); i++){
-        cout<<answer[i]<<'\n';
-    }
 }
