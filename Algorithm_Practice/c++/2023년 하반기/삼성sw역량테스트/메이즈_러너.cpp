@@ -34,20 +34,33 @@ int main() {
         int r, c;
         cin>>r>>c;
 
-        pos.push({r-1,c-1}); //참가자 위치
+        board[r-1][c-1] = -1;
+        pos.push({r-1,c-1}); //참가자 위치 - 참가자가 한 칸에 여러명일 수 있음.
     }
 
     //출구 위치
     cin>>exitR>>exitC;
-
-    exitR -= 1;
-    exitC -= 1;
+    board[exitR-1][exitC-1] = -2;
 
     //k초
-    for(int t=0; t<1; t++){
+    for(int t=0; t<k; t++){
+        cout<<"t "<<t+1<<"초"<<'\n';
         //참가자 이동
-        queue<pair<int,int>> temp;
-        while(!pos.empty()){
+        //출구 위치 찾기
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if(board[i][j]==-2){
+                    exitR = i;
+                    exitC = j;
+                }
+            }
+        }
+
+        if(pos.empty()){
+            break;
+        }
+        
+        for(int i=0; i<pos.size(); i++){
             int r = pos.front().first;
             int c = pos.front().second;
             //이동하지 못할 수도 있음.
@@ -58,26 +71,36 @@ int main() {
                 int nextC = c+dc[k];
 
                 //참가자가 이동하는 경우
-                if(verify(nextR, nextC, n) && board[nextR][nextC]==0 && abs(nextR-exitR)+abs(nextC-exitC)<abs(r-exitR)+abs(c-exitC)){
-                    finalNextR = nextR;
-                    finalNextC = nextC;
+                if(verify(nextR, nextC, n) && abs(nextR-exitR)+abs(nextC-exitC)<abs(finalNextR-exitR)+abs(finalNextC-exitC)){
+                    if(board[nextR][nextC]==0){ //이동한 곳이 출구가 아닌 경우
+                        finalNextR = nextR;
+                        finalNextC = nextC;
+                    }
+                    else if(board[nextR][nextC]==-2){ //이동한 곳이 출구인 경우
+                        finalNextR = nextR;
+                        finalNextC = nextC;
+                        break;
+                    }
                 }
             }
             pos.pop();
-            totalDistance += abs(r-finalNextR)+abs(c-finalNextC);
-            if(!(finalNextR==exitR && finalNextC==exitC)){ //출구에 도달하지 못한 경우
-                temp.push({finalNextR, finalNextC});
+            board[r][c] = 0;
+            if(board[finalNextR][finalNextC]!=-2){
+                board[finalNextR][finalNextC]=-1;
+                cout<<"이동 "<<r<<' '<<c<<" to "<<finalNextR<<' '<<finalNextC<<'\n';
+                pos.push({finalNextR, finalNextC});
             }
+            totalDistance += abs(r-finalNextR)+abs(c-finalNextC);            
         }
 
-        while(!temp.empty()){
-            pos.push({temp.front().first, temp.front().second});
-            temp.pop();
+        cout<<"이동한 총 거리 "<<totalDistance<<'\n';
+        for(int a=0; a<n; a++){
+            for(int b=0; b<n; b++){
+                cout<<board[a][b]<<' ';
+            }
+            cout<<'\n';
         }
-        
-        if(pos.empty()){ //참가자가 다 나간 경우
-            break;
-        }
+        cout<<'\n'; 
 
         //미로 회전
         //1. 가장 작은 정사각형 구하기
@@ -85,13 +108,17 @@ int main() {
         int minLength = n; //한 명 이상의 참가자와 출구를 포함한 가장 작은 정사각형의 한 변의 길이
         int minLengthPersonR=n-1, minLengthPersonC=n-1;
         for(int i=0; i<pos.size(); i++){
-            if(minLength>=max(abs(pos.front().first-exitR), abs(pos.front().second-exitC))+1){
-                
+            int r = pos.front().first;
+            int c = pos.front().second;
+            if(minLength>max(abs(pos.front().first-exitR), abs(pos.front().second-exitC))+1){
+            
                 minLength = max(abs(pos.front().first-exitR), abs(pos.front().second-exitC))+1;
                 
-                int r = pos.front().first;
-                int c = pos.front().second;
-                
+                minLengthPersonR = r;
+                minLengthPersonC = c;
+            }
+            else if(minLength==max(abs(pos.front().first-exitR), abs(pos.front().second-exitC))+1){    
+
                 if(r<minLengthPersonR){
                     minLengthPersonR = r;
                     minLengthPersonC = c;
@@ -101,7 +128,7 @@ int main() {
                     minLengthPersonC = c;
                 }
             }
-            pos.push({pos.front().first, pos.front().second});
+            pos.push({r,c});
             pos.pop();
         }
 
@@ -129,8 +156,8 @@ int main() {
             else{
                 luC = 0;
                 ldC = 0;
-                ruC = minLength;
-                rdC = minLength;
+                ruC = minLength-1;
+                rdC = minLength-1;
             }
         }
         else if(abs(minLengthPersonR-exitR)<abs(minLengthPersonC-exitC)){
@@ -142,8 +169,8 @@ int main() {
             else{
                 luR = 0;
                 ruR = 0;
-                ldR = minLength;
-                rdR = minLength;
+                ldR = minLength-1;
+                rdR = minLength-1;
             }
         }
         cout<<"lu "<<luR<<' '<<luC<<" ru "<<ruR<<' '<<ruC<<'\n';
@@ -157,50 +184,140 @@ int main() {
         //board 값 변경
         //exitR, exitC 변경
         //참가자 좌표 변경
-        for(int i=minLength; i>1; i-=2){
-            vector<int> rightTemp; //오른쪽 변 값 저장
-            for(int j=ruR+(minLength-i)/2; j<=rdR-(minLength-i)/2; j++){
-                rightTemp.push_back(board[ruC+(minLength-i)/2][j]);
+        
+            for(int i=0; i<=minLength/2; i++){
+                
+
+                vector<int> rightTemp; //오른쪽 변 값 저장
+                for(int j=ruR+i; j<=rdR-i; j++){
+                    rightTemp.push_back(board[j][ruC-i]);
+                }
+                
+                //윗쪽 변 -> 오른쪽 변
+                for(int j=luC+i; j<=ruC-i; j++){
+                    
+                    if(board[luR+i][j]>0)
+                        board[ruR+j-luC][ruC-i] = board[luR+i][j]-1;
+                    else
+                        board[ruR+j-luC][ruC-i] = board[luR+i][j];
+                }
+            //     for(int a=0; a<n; a++){
+            //     for(int b=0; b<n; b++){
+            //         cout<<board[a][b]<<' ';
+            //     }
+            //     cout<<'\n';
+            // }
+            // cout<<'\n';
+                //왼쪽 변 -> 윗쪽 변
+                for(int j=luR+i; j<=ldR-i; j++){
+                    
+                    cout<<luR+i<<' '<<ruC-j+luR<<' '<<luC+i<<'\n';
+                    if(board[j][luC+i]>0)
+                        board[luR+i][ruC-j+luR] = board[j][luC+i]-1;
+                    else
+                        board[luR+i][ruC-j+luR] = board[j][luC+i];
+                }
+            //     for(int a=0; a<n; a++){
+            //     for(int b=0; b<n; b++){
+            //         cout<<board[a][b]<<' ';
+            //     }
+            //     cout<<'\n';
+            // }
+            // cout<<'\n';
+                //아랫쪽 변 -> 왼쪽 변
+                for(int j=ldC+i; j<=rdC-i; j++){
+                    cout<<"dtoR "<<luR+j-ldC<<' '<<j<<'\n';
+                    
+                    if(board[ldR-i][j]>0)
+                        board[luR+j-ldC][luC+i] = board[ldR-i][j]-1;
+                    else
+                        board[luR+j-ldC][luC+i] = board[ldR-i][j];
+                }
+            //     for(int a=0; a<n; a++){
+            //     for(int b=0; b<n; b++){
+            //         cout<<board[a][b]<<' ';
+            //     }
+            //     cout<<'\n';
+            // }
+            // cout<<'\n';
+                //오른쪽 변 -> 아랫쪽 변
+                for(int j=0; j<rightTemp.size(); j++){
+                    cout<<"rtod "<<rdR-i<<" "<<ruC-i-j<<'\n';
+                    
+                    if(rightTemp[j]>0)
+                        board[rdR-i][ruC-i-j] = rightTemp[j]-1;
+                    else   
+                        board[rdR-i][ruC-i-j] = rightTemp[j];
+                }
+                for(int a=0; a<n; a++){
+                for(int b=0; b<n; b++){
+                    cout<<board[a][b]<<' ';
+                }
+                cout<<'\n';
             }
-            //윗쪽 변 -> 오른쪽 변
-            for(int j=luC+(minLength-i)/2; j<=ruC-(minLength-i)/2; j++){
-                cout<<"j "<<j<<'\n';
-                if(board[luR+(minLength-i)/2][j]>0)
-                    board[ruR+j-luC][ruC-(minLength-i)/2] = board[luR+(minLength-i)/2][j]-1;
-                cout<<"board["<<ruR+j-luC<<"]["<<ruC-(minLength-i)/2<<"] = board["<<luR+(minLength-i)/2<<"]["<<j<<"] "<<board[luR+(minLength-i)/2][j]<<'\n';
-            }
-            //왼쪽 변 -> 윗쪽 변
-            for(int j=luR+(minLength-i)/2; j<=ldR-(minLength-i)/2; j++){
-                if(board[j][luC+(minLength-i)/2]>0)
-                    board[luR+(minLength-i)/2][luC+j-luR] = board[j][luC+(minLength-i)/2]-1;
-            }
-            //아랫쪽 변 -> 왼쪽 변
-            for(int j=ldC+(minLength-i)/2; j<=rdC-(minLength-i)/2; j++){
-                if(board[ldR-(minLength-i)/2][j]>0)
-                    board[luC+(minLength-i)/2][luR+j-ldC] = board[ldR-(minLength-i)/2][j]-1;
-                cout<<"board["<<luC+(minLength-i)/2<<"]["<<luR+j-ldC<<"] = board["<<ldR+(minLength-i)/2<<"]["<<j<<"] "<<board[ldR-(minLength-i)/2][j]<<'\n';
-            }
-            //오른쪽 변 -> 아랫쪽 변
-            for(int j=0; j<rightTemp.size(); j++){
-                if(rightTemp[j]>0)
-                    board[rdR-(minLength-i)/2][ruC-(minLength-i)/2-j] = rightTemp[j]-1;
+            cout<<'\n';
+
+            for(int k=0; k<pos.size(); k++){
+                int r = pos.front().first;
+                int c = pos.front().second;
+                cout<<"r "<<r<<" c "<<c<<'\n';
+                board[r][c]=0;
+                //위->오른
+                if(r==luR+i && luC+i<=c && c<=ruC-i){
+                    r = rdR-i-(ruC-i-c);
+                    c = ruC-i;
+                }
+                //왼->위
+                else if( luR+i<=r && r<=ldR-i && c==luC+i){
+                    c = ruC-i-(r-(luR+i));
+                    r = luR+i;
+                }
+                //아래->왼
+                else if(r==ldR-i && luC+i<=c && c<=ruC-i){
+                    r = luR+i+(c-(luC+i));
+                    c = luC+i;
+                }
+                //오른->아래    
+                else if(ruR+i<=r && r<=rdR-i && c==ruC-i){
+                    c = luC+i+(r-(rdR-i));
+                    r = rdR-i;
+                }
+                
+                
+                board[r][c] = -1;
+                pos.push({r,c});
+                pos.pop();
+                cout<<"new r "<<r<<" new c "<<c<<'\n';
             }
         }
-
+            
+        
         for(int a=0; a<n; a++){
             for(int b=0; b<n; b++){
                 cout<<board[a][b]<<' ';
             }
             cout<<'\n';
         }
-        cout<<'\n';
-            
-        //참가자 좌표 회전
-        
+        cout<<'\n';   
 
+cout<<totalDistance<<'\n';
+    bool flag = false;
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+            if(board[i][j]==-2){
+                exitR = i+1;
+                exitC = j+1;
+                flag = true;
+                break;
+            }
+        }
+        if(flag){
+            break;
+        }
+    }
+    cout<<exitR<<' '<<exitC<<'\n';
     }
 
     
-    
-    return 0;
+    cout<<"끝";
 }
