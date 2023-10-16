@@ -6,6 +6,13 @@
 using namespace std;
 
 //투 포인터
+//팰린드롬 길이가 짝수인 경우, 홀수인 경우 나누어서 생각하기
+//주의! 다 거쳤는데도 answer == 0 -> answer = 1로 바꿔주어야함.
+//1. 팰린드롬 길이가 짝수인 경우 - left=i, right=i+1로 s[left]==s[right]인 경우, left 하나 감소 & right 하나 증가
+//2. 팰린드롬 길이가 홀수인 경우 - left=i-1, right=i+1로 s[left]==s[right]인 경우, left 하나 감소 & right 하나 증가
+//마지막에 s[left]==s[right] 한 번 더 확인해줌으로써 마지막 글자끼리도 같은지 확인하고, max 길이 구하기
+//효율성 케이스 통과!
+//최대시간: 대략 2(홀수, 짝수)*2500(s 최대 길이)*1250(s 최대 길이의 1/2) -> 625*10^4이하 
 int solution(string s)
 {
     int answer = 0;
