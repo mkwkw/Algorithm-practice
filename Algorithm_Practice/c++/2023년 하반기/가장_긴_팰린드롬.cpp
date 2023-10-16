@@ -5,26 +5,72 @@
 
 using namespace std;
 
-//정확성 통과
-//시간초과
+//투 포인터
 int solution(string s)
 {
-    string s1, s2;
-    int answer=1;
+    int answer = 0;
+    int left = 0, right = 1;
     
-    reverse(s1.begin(), s1.end());
-    
-    for(int i=0; i<s.length(); i++){
-        for(int j=1; j<=s.length()-i; j++){
-            s1 = s.substr(i, j);
-            s2 = s1;
-            reverse(s2.begin(), s2.end());
-            
-            if(s1==s2 && answer<s1.length()){
-                answer = s1.length();
-            }
-        }
+    //1. s가 1인 경우
+    if(s.length()==1){
+        return 1;
     }
+    
+    //2. s가 2이상인 경우 - 팰린드롬이 짝수일 때
+    if(s.length()>=2){
+        for(int i=0; i<s.length()-1; i++){
+            left = i;
+            right = i+1;
+            
+            if(s[left]!=s[right]){
+                continue;
+            }
+            
+            while(s[left]==s[right]){
+                if(left==0 || right==s.length()-1){
+                    break;
+                }
+                --left;
+                ++right;
+            }
+            if(s[left]==s[right]){
+                answer = max(answer, right-(left)+1);  
+            }
+            else{
+                answer = max(answer, right-1-(left+1)+1);
+            }
+            //cout<<"i "<<i<<' '<<right<<' '<<left<<' '<<answer<<'\n';
+        }    
+    }
+    
+    //3. s가 3이상인 경우 - 팰린드롬이 홀수 일 때
+    if(s.length()>=3){
+        for(int i=1; i<s.length()-1; i++){
+            left = i-1;
+            right = i+1;
+            if(s[left]!=s[right]){
+                continue;
+            }
+            while(s[left]==s[right]){
+                if(left==0 || right==s.length()-1){
+                    break;
+                }
+                --left;
+                ++right;
+            }
+            
+            if(s[left]==s[right]){
+                answer = max(answer, right-(left)+1);  
+            }
+            else{
+                answer = max(answer, right-1-(left+1)+1);
+            }
+            //cout<<"i "<<i<<' '<<right<<' '<<left<<' '<<answer<<'\n';
+        }   
+    }
+    
+    if(answer==0)
+        answer = 1;
     
     return answer;
 }
