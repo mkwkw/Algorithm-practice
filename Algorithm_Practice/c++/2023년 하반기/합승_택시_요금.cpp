@@ -1,97 +1,38 @@
-#include <string>
 #include <vector>
-#include <map>
-#include <queue>
-#include <iostream>
-#define INF 100000000
 
 using namespace std;
 
-//다익스트라
-//1. dfs -> 시간 초과
-//2. bfs - 큐 -> 효율성 테스트 케이스 7,8만 시간초과
+vector<vector<int>> board;
 
-//최단 거리 구하기
-//양방향
-//s->모든 노드 최단 거리
-//a->모든 노드 최단 거리
-//b->모든 노드 최단 거리
-
-
+//플로이드 와샬 - 모든 지점에서 모든 지점으로 - 3중 for문
 int solution(int n, int s, int a, int b, vector<vector<int>> fares) {
-    map<int, int> sToAll, aToAll, bToAll;
-    map<int, vector<pair<int,int>>> fareMap;
-
     int answer = 1000000001;
-    queue<int> sQ, aQ, bQ; //노드 번호
+    int INF = 100000000;
+    board.assign(n+1, vector<int>(n+1, INF));
 
-    //초기화
-    //s,a,b->모든 노드 최단 거리
-    for(int i=1; i<=n; i++){
-        sToAll[i] = INF;    
-        aToAll[i] = INF;    
-        bToAll[i] = INF;    
+    // 초기 지도 완성
+    for (int i = 0; i < fares.size(); i++) {
+        board[fares[i][0]][fares[i][1]] = fares[i][2];
+        board[fares[i][1]][fares[i][0]] = fares[i][2];
     }
-    sToAll[s] = 0;
-    aToAll[a] = 0;
-    bToAll[b] = 0;
-    
-    //fareMap
-    for(int i=0; i<fares.size(); i++){
-        fareMap[fares[i][0]].push_back({fares[i][1], fares[i][2]});
-        fareMap[fares[i][1]].push_back({fares[i][0], fares[i][2]});    
+
+    // 자기 노드로 가는 비용 0
+    for (int i = 1; i <= n ; i++) {
+        board[i][i] = 0;
     }
-    
-    aQ.push(a);
-    while(!aQ.empty()){
-        int num = aQ.front();
-        //cout<<num<<'\n';
-        for(int i=0; i<fareMap[num].size(); i++){
-            if(aToAll[fareMap[num][i].first]>aToAll[num]+fareMap[num][i].second){
-                aToAll[fareMap[num][i].first] = aToAll[num]+fareMap[num][i].second;
-                aQ.push(fareMap[num][i].first);    
+
+    // floyd warshall - 모든 노드에서 모든 노드로 가는 최소 요금 구하기
+    for (int k = 1; k <= n; k++) {
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                board[i][j] =  min(board[i][j], board[i][k] + board[k][j]);
             }
         }
-        
-        aQ.pop();
     }
-    
-    bQ.push(b);
-    while(!bQ.empty()){
-        int num = bQ.front();
-        //cout<<num<<'\n';
-        for(int i=0; i<fareMap[num].size(); i++){
-            if(bToAll[fareMap[num][i].first]>bToAll[num]+fareMap[num][i].second){
-                bToAll[fareMap[num][i].first] = bToAll[num]+fareMap[num][i].second;
-                bQ.push(fareMap[num][i].first);    
-            }
-        }
-        
-        bQ.pop();
+
+    for (int i = 1; i <= n; i++) {  //합승 지점이 i 일 때 최소 비용 도출 (i==s일 때, 합승하지 않는 경우 포함)
+        answer = min(answer, board[s][i] + board[i][a] + board[i][b]);
     }
-    
-    sQ.push(s);
-    while(!sQ.empty()){
-        int num = sQ.front();
-        //cout<<num<<'\n';    
-        for(int i=0; i<fareMap[num].size(); i++){
-            if(sToAll[fareMap[num][i].first]>sToAll[num]+fareMap[num][i].second){
-                sToAll[fareMap[num][i].first] = sToAll[num]+fareMap[num][i].second;
-                
-                sQ.push(fareMap[num][i].first);    
-            }
-            answer = min(answer, sToAll[fareMap[num][i].first]+bToAll[fareMap[num][i].first]+aToAll[fareMap[num][i].first]);
-        }
-        
-        sQ.pop();
-    }
-  
-    // for(int i=1; i<=n; i++){    
-    //     answer = min(answer, sToAll[i]+bToAll[i]+aToAll[i]);
-    // }
-     
-    // for(auto m : sToAll){
-    //     cout<<m.first<<' '<<m.second<<'\n';
-    // }
+
     return answer;
 }
