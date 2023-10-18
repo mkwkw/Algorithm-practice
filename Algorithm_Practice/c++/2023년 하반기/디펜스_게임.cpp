@@ -6,40 +6,9 @@
 
 using namespace std;
 
-//우선순위 큐
-//적의 수 내림차순으로 정렬 후, 상위 k개의 라운드에 무적권 부여
-//규칙대로 단계 진행 후, 끝났을 때, k개의 무적권 다 썼는지 남았는지 확인
-//무적권이 남았다면, 지금까지 진행한 라운드+바로 다음 라운드 중에서 최댓값 찾아서 무적권 부여
-//87.5점 - 테스트케이스 3,6,7,9 시간 초과
-struct Info{
-    int enemySum;
-    int kCnt;
-    int roundCnt;
-};
-
-Info fight(int n, vector<int> &enemy, vector<bool> &skill){
-    int enemySum = 0;
-    int kCnt = 0;
-    int roundCnt = 0;
-    for(int i=0; i<enemy.size(); i++){
-        
-        if(!skill[i])
-            enemySum += enemy[i];
-        else
-            kCnt++;
-        
-        if(n<enemySum){
-            break;
-        }
-        else{
-            roundCnt++;
-        }
-    }
-    
-    return {enemySum, kCnt, roundCnt};
-}
-
-//적의 수가 많은 라운드에서 무적권을 쓰는 것이 좋음.
+//최소 힙 (O(nlogn))
+//주의! 끝까지 탐색했는데 enemySum<=n인 경우
+//(+ 이분 탐색 (O(nlogn) => mid로 적당한 범위 찾기 - 0~mid(찾고자하는 범위)만큼 끊어서 내림차순 정렬 후, 상위 k개 제외한 적들의 합 구하기 -> n보다 적거나 같으면 start = mid+1, n보다 크면 end = mid-1)
 int solution(int n, int k, vector<int> enemy) {
     int answer = 0;
         
@@ -58,63 +27,30 @@ int solution(int n, int k, vector<int> enemy) {
     }
     
     //무적권의 개수<라운드 수
-    //무적권부여하기 위하여 적의 수 내림차순 정렬 필요
-    priority_queue<pair<int,int>> enemyPQ;
+    //최댓값인 라운드 k개를 보관하기 위해 최소 힙 사용 - 오름차순 우선순위 큐!
+    //pq에는 k개만 있도록!
+    priority_queue<int, vector<int>, greater<>> pq;
+    int enemySum = 0;
     for(int i=0; i<enemy.size(); i++){
-        enemyPQ.push({enemy[i], i});
-    }
-    
-    vector<bool> skill; //무적권 적용할 라운드 표시
-    skill.assign(enemy.size(), false);
-    
-    //최대 적 수 순서대로 k개 무적권 부여 표시
-    for(int i=0; i<k; i++){
-        int idx = enemyPQ.top().second;
-        //cout<<enemyPQ.top().first<<' '<<idx<<'\n';
-        skill[idx] = true;
-        enemyPQ.pop();
-    }
-    
-    // while(!enemyPQ.empty()){
-    //     enemyPQ.pop();
-    // }
-    
-    Info info = fight(n, enemy, skill);
-    int enemySum = info.enemySum;
-    int kCnt = info.kCnt;
-    int roundCnt = info.roundCnt;
-    //cout<<enemySum<<' '<<kCnt<<' '<<roundCnt<<'\n';
-    if(kCnt==k){
-        return roundCnt;
-    }
-    else{
-        for(int i=roundCnt; i<enemy.size(); i++){
-            if(skill[i]){
-                skill[i] = false;
-            }
-        }
         
-        while(kCnt<k){ //지금까지 도달한 구간에서 최댓값 찾아서 그 라운드에 무적권 부여하기
-            priority_queue<pair<int,int>> enemyPQ1;
-            for(int i=0; i<=roundCnt; i++){ //해당 구간 바로 다음 라운드에 무적권 부여되어있으면, 다음 라운드까지 넘어갈 수 있음.
-                if(!skill[i]){
-                    enemyPQ1.push({enemy[i], i});
-                }
+        if(pq.size()<k){
+            pq.push(enemy[i]);
+        }
+        else{
+            pq.push(enemy[i]);
+            enemySum += pq.top();
+            pq.pop();
+            if(enemySum>n){
+                answer = i;
+                break;
             }
-            
-            int idx1 = enemyPQ1.top().second;
-            skill[idx1] = true;
-            
-            
-            Info info1 = fight(n, enemy, skill);
-            enemySum = info1.enemySum;
-            roundCnt = info1.roundCnt;
-            
-            kCnt++;
         }
     }
     
-    answer = roundCnt;
+    //끝까지 탐색했는데 enemySum<=n인 경우
+    if(answer==0){
+        answer = enemy.size();
+    }
     
     return answer;
 }
