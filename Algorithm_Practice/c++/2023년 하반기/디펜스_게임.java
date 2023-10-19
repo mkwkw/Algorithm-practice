@@ -1,8 +1,8 @@
 import java.util.*;
 
+//이분탐색
 class Solution {
     public int solution(int n, int k, int[] enemy) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
         int answer = 0;
         
         //무조건 모든 라운드 도달하는 경우
@@ -18,27 +18,33 @@ class Solution {
         if((long)n>=totalEnemy){
             return enemy.length;
         }
-        
-        //우선순위 큐
-        int enemySum = 0;
-        for(int i=0; i<enemy.length; i++){
-            if(pq.size()<k){
-                pq.offer(enemy[i]);
-                continue;
+    
+        //이분 탐색
+        int left = 0, right = enemy.length-1, mid = enemy.length-1;
+
+        while(left<=right){
+            mid = (left+right)/2;
+
+            Integer temp[] = new Integer[mid+1];
+            for(int i=0; i<mid+1; i++){
+                temp[i] = (Integer) enemy[i];
+            }
+            Arrays.sort(temp, Collections.reverseOrder());
+
+            //제일 큰 값 k개 빼고 난 후, 합 구하기 -> 합이 n보다 같거나 작으면 left = mid+1, 크면 right = mid-1 해서 이분탐색
+            //합이 int 범위를 넘을수도 있으므로 long으로 설정해서 합 구하기
+            long enemySum = 0;
+            for(int i=k; i<mid+1; i++){
+                enemySum += (long)temp[i];
             }
             
-            pq.offer(enemy[i]);
-            enemySum += pq.peek();
-            pq.poll();
-            
-            if(enemySum>n){
-                answer = Math.max(answer, i);
-                break;
+            if(enemySum<=(long)n){
+                answer = Math.max(answer, mid+1);
+                left = mid+1;
             }
-        }
-        
-        if(answer==0){
-            answer = enemy.length;
+            else{
+                right = mid-1;
+            }
         }
         
         return answer;
