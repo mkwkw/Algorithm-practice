@@ -1,5 +1,7 @@
 import java.util.*;
+import java.io.*;
 
+//bfs
 class Solution {
     class Num{
         private int num;
@@ -43,23 +45,34 @@ class Solution {
         ArrayList<Double> results1 = new ArrayList<>();
         results1.add(0.0);
         for(int i=1; i<nums1.size(); i++){
-            Double result = results1.get(i-1)+Double.valueOf((nums1.get(i-1)+nums1.get(i))/2);
+            //System.out.println(nums1.get(i));
+            Double result = results1.get(i-1)+Double.valueOf((nums1.get(i-1)+nums1.get(i)))/2.0;
             results1.add(result);
         }
         
         ArrayList<Double> answerList = new ArrayList<>();
         for(int i=0; i<ranges.length; i++){
              int x1 = ranges[i][0];
-             int x2 = nums1.size()+ranges[i][1];
-             //Double result = results1.get(x2)-results1.get(x1);
-             //answerList.add(result);
+             int x2 = nums1.size()-1+ranges[i][1];
+            
+            //System.out.println(x1+" "+x2);
+            
+            if(x1>x2){
+                answerList.add(-1.0);
+                continue;
+            }
+             Double result = results1.get(x2)-results1.get(x1);
+            if(result<0){
+                result = -1.0;
+            }
+             answerList.add(result);
         }
-        //Double[] arr = answerList.toArray(new Double[answerList.size()]);
-        //answer = new double[arr.length];
+        Double[] arr = answerList.toArray(new Double[answerList.size()]);
+        answer = new double[arr.length];
         
-        // for(int i=0; i<arr.length; i++){
-        //     answer[i] = arr[i];
-        // }
+        for(int i=0; i<arr.length; i++){
+            answer[i] = arr[i];
+        }
         return answer;
     }
 }
