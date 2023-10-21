@@ -4,23 +4,21 @@
 #include <algorithm>
 
 using namespace std;
-int cnt, minNum = 100;
-void dfs(int cardNum, vector<int> cards, vector<int> heads, vector<int> temp){
-    cout<<heads[cards[cardNum]]<<' '<<cards[cardNum]<<'\n';
-    if(heads[cards[cardNum]] == cards[cardNum]){
-        cnt++;
-        minNum = min(minNum, cards[cardNum]);
-        heads[cardNum] = minNum;
-        temp.push_back(cards[cardNum]);
-        cout<<cards[cardNum]<<'\n';
-        dfs(cards[cardNum], cards, heads, temp);
+
+//dfs, 방문배열
+vector<bool> visited;
+int dfs(int cardNum, vector<int> cards, int cnt){
+    
+    if(!visited[cards[cardNum]]){
+        //cout<<cards[cardNum]<<'\n';
+        visited[cards[cardNum]]=true;
+        
+        return dfs(cards[cardNum], cards, cnt+1);
     }
     else{
-        for(int i=0; i<temp.size(); i++){
-            heads[temp[i]] = minNum;
-        }
-        return;
+        return cnt;
     }
+    
 }
 int solution(vector<int> cards) {
     int answer = 0;
@@ -30,32 +28,24 @@ int solution(vector<int> cards) {
     for(int i=1; i<=cards.size(); i++){
         cards1[i] = cards[i-1];
     }
-    
-    vector<int> heads;
-    heads.assign(cards.size()+1, 0);
-    
-    for(int i=1; i<=cards.size(); i++){
-        heads[i] = i;
-    }
-    
+        
+    visited.assign(cards.size()+1, false);
+
     for(int i=1; i<cards1.size(); i++){
         
         //집합 찾기
-        cout<<heads[cards1[i]]<<' '<<cards1[i]<<'\n';
-        if(heads[cards1[i]]==cards1[i]){
-            cnt = 1;
-            minNum = cards1[i];
-            dfs(cards1[i],cards1, heads,{cards1[i]});
-            setSize.push_back(cnt);
+        if(!visited[cards1[i]]){
+            visited[cards1[i]] = true;
+            setSize.push_back(dfs(cards1[i],cards1,1));
         }
         
     }
     
-    for(int i=0; i<setSize.size(); i++){
-        cout<<setSize[i]<<' ';
-    }
+    // for(int i=0; i<setSize.size(); i++){
+    //     cout<<setSize[i]<<' ';
+    // }
     
-    if(setSize.size()==1){
+    if(setSize[0]==cards.size()){
         answer = 0;
     }
     else{
