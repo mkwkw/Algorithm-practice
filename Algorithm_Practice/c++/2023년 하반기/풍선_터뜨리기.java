@@ -1,25 +1,13 @@
 import java.util.*;
 import java.io.*;
 
-//풍선 기준 왼쪽에서 가장 작은 값과 오른쪽에서 가장 작은 값 각각 비교
-//rightMin==a[i]일 때, i+1부터 끝까지 배열 잘라서 정렬하는 식
-//시간초과 - 8/15 테스트케이스
+//인덱스 i 기준 왼쪽에서의 최솟값, 오른쪽에서의 최솟값 저장하는 배열 각각 생성
 class Solution {
-    class numAndIdx{
-        int num;
-        int idx;
-        
-        public numAndIdx(int num, int idx){
-            this.num = num;
-            this.idx = idx;
-        }
-    }
     
     public int solution(int[] a) {
         int answer = 0;
-        int leftMin = -1000000001;
-        int rightMin = -1000000001;
-        int[] temp = Arrays.copyOf(a, a.length);
+        int[] leftMin = new int[a.length]; //인덱스 i 기준 왼쪽에서의 최솟값
+        int[] rightMin = new int[a.length]; //인덱스 i 기준 오른쪽에서의 최솟값
         
         //a의 길이가 1이나 2일 때
         if(a.length==1 || a.length==2){
@@ -27,32 +15,26 @@ class Solution {
         }
         
         //a의 길이가 3이상일 때
-        Arrays.sort(temp, 2, temp.length); //인덱스 2부터 끝까지 정렬
         answer = 2; //맨 처음과 맨 끝은 항상 가능
-        rightMin = temp[2];
-        leftMin = temp[0];
+        leftMin[1] = a[0];
+        rightMin[a.length-2] = a[a.length-1];
+        
+        //인덱스 i 왼쪽에서의 최솟값 저장하기
+        for(int i=1; i<a.length-1; i++){
+            leftMin[i+1] = Math.min(leftMin[i], a[i]);
+        }
+        
+        //인덱스 i 오른쪽에서의 최솟값 저장하기
+        for(int i=a.length-2; i>=1; i--){
+            rightMin[i-1] = Math.min(rightMin[i], a[i]);
+        }
         
         for(int i=1; i<a.length-1; i++){
-            
-            if(rightMin == a[i]){
-                temp = Arrays.copyOfRange(a, i+1, a.length);
-                Arrays.sort(temp);
-                // for(int j=0; j<temp.length; j++){
-                //     System.out.print(temp[j]+" ");
-                // }
-                rightMin = temp[0];
-                
-            }
-            
-            //System.out.println("leftMin "+leftMin+" "+a[i]+" rightMin "+rightMin);
-            if(leftMin<a[i] && rightMin<a[i]){
+            //System.out.println(leftMin[i]+" "+a[i]+" "+rightMin[i]);
+            if(leftMin[i]<a[i] && rightMin[i]<a[i]){
                 continue;
             }
             answer++;
-            
-            if(leftMin>a[i]){
-                leftMin = a[i];
-            }
         }
         
         return answer;
