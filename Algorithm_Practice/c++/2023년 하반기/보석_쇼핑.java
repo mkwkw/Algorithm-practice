@@ -4,8 +4,10 @@ import java.io.*;
 class Solution {
     public int[] solution(String[] gems) {
         //1. 보석의 종류 세기
-        //2. 보석의 종류~전체 진열대 크기까지 길이 늘려가면서 탐색
+        //2. 투 포인터
         int[] answer = new int[2];
+        answer[0] = 1;
+        answer[1] = gems.length;
         Set<String> gemType = new HashSet<>();
         
         for(int i=0; i<gems.length; i++){
@@ -14,18 +16,32 @@ class Solution {
         
         //보석 종류
         int gemTypes = gemType.size();
-        System.out.println(gemTypes);
-        for(int i=gemTypes; i<=gems.length; i++){
-            for(int j=0; j<=gems.length-i; j++){
-                Set<String> temp = new HashSet<>();
-                for(int k=j; k<j+i; k++){
-                    temp.add(gems[k]);
+        
+        //투 포인터
+        int start = 0;
+        int end = 0;
+        
+        while(start<gems.length && end<gems.length){
+            //System.out.println(start+" "+end);
+            Set<String> set = new HashSet<>();
+            for(int i=start; i<=end; i++){
+                set.add(gems[i]);
+            }
+            if(set.size()<gemTypes){
+                end++;
+            }
+            else if(set.size()==gemTypes){
+                if(end-start<answer[1]-answer[0]){
+                    answer[0] = start+1;
+                    answer[1] = end+1;
                 }
-                if(temp.size()==gemTypes){
-                    answer[0] = j+1;
-                    answer[1] = j+i;
-                    return answer;
+                else if(end-start==answer[1]-answer[0]){
+                    if(start+1<answer[0]){
+                        answer[0] = start+1;
+                        answer[1] = end+1;
+                    }
                 }
+                start++;
             }
         }
         
