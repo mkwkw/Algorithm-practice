@@ -1,50 +1,34 @@
 import java.util.*;
-import java.io.*;
 
+//투 포인터, 맵
+//투 포인터: 보석 인덱스 범위
+//맵: 보석 이름, 보석 개수 - 보석 개수로 중복 확인, 최소 개수 1이상 이어야하는데 이것도 체크
+//start를 어떻게 이동시키는가 - gem[start]의 개수가 2개 이상인 경우 - 이동
 class Solution {
     public int[] solution(String[] gems) {
-        //1. 보석의 종류 세기
-        //2. 투 포인터
+        int kind = new HashSet<>(Arrays.asList(gems)).size();
+ 
         int[] answer = new int[2];
-        answer[0] = 1;
-        answer[1] = gems.length;
-        Set<String> gemType = new HashSet<>();
+        int length = Integer.MAX_VALUE, start = 0;
+               
+        Map<String, Integer> map = new HashMap<>(); //보석 이름, 보석의 개수
         
-        for(int i=0; i<gems.length; i++){
-            gemType.add(gems[i]);
-        }
-        
-        //보석 종류
-        int gemTypes = gemType.size();
-        
-        //투 포인터
-        int start = 0;
-        int end = 0;
-        
-        while(start<gems.length && end<gems.length){
-            //System.out.println(start+" "+end);
-            Set<String> set = new HashSet<>();
-            for(int i=start; i<=end; i++){
-                set.add(gems[i]);
-            }
-            if(set.size()<gemTypes){
-                end++;
-            }
-            else if(set.size()==gemTypes){
-                if(end-start<answer[1]-answer[0]){
-                    answer[0] = start+1;
-                    answer[1] = end+1;
-                }
-                else if(end-start==answer[1]-answer[0]){
-                    if(start+1<answer[0]){
-                        answer[0] = start+1;
-                        answer[1] = end+1;
-                    }
-                }
+        for (int end = 0; end < gems.length; end++) {
+            map.put(gems[end], map.getOrDefault(gems[end], 0) + 1);
+ 
+            //start번째 보석의 개수가 2개 이상이면 보석의 개수를 하나 줄이고 start를 +1
+            while (map.get(gems[start]) > 1) {
+                map.put(gems[start], map.get(gems[start]) - 1);
                 start++;
             }
+ 
+            if (map.size() == kind && length > (end - start)) {
+                length = end - start;
+                answer[0] = start + 1;
+                answer[1] = end + 1;
+            }
         }
-        
+ 
         return answer;
     }
 }
