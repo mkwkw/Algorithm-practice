@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <set>
 #include <algorithm>
 
 using namespace std;
@@ -10,8 +9,7 @@ int main()
     int n;
     long long ans1, ans2, ans3;
     long long abs_sum = 6000000000;
-    set<long long> ans;
-    
+        
     //입력
     cin>>n;
 
@@ -34,15 +32,12 @@ int main()
         while(left<right)
         {
             long long mix = v[i]+v[left]+v[right];
-
-            //합의 절댓값 비교로 abs_sum 갱신
-            //합 비교로 left, right 갱신
             
             if(abs(mix)<abs_sum) //합이 0에 가까울경우 abs_sum 갱신
             { 
-                ans1 = v[left];
-                ans2 = v[right];
-                ans3 = v[i];
+                ans2 = v[left];
+                ans3 = v[right];
+                ans1 = v[i];
 
                 abs_sum = abs(mix);
             }
@@ -57,13 +52,6 @@ int main()
         }
     }
 
-    ans.insert(ans1);
-    ans.insert(ans2);
-    ans.insert(ans3);
-
-    for(long long a : ans)
-    {
-        cout<<a<<' ';
-    }
+    cout<<ans1<<' '<<ans2<<' '<<ans3;
 
 }
